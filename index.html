@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MediSchedule – Appointment Management (Demo)</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<button id="menuBtn" class="menu-btn" aria-label="Open menu">☰</button>
+<aside id="sidebar">
+  <div class="brand">🏥 <span>MediSchedule<small>Demo project</small></span></div>
+  <nav id="nav" aria-label="Main"></nav>
+  <p class="demo-note">Fictional sample data only. Not connected to any hospital.</p>
+</aside>
+
+<main>
+  <header class="top"><h1 id="title"></h1><span class="badge">Demo · saved in your browser</span></header>
+
+  <section class="page" id="p-dashboard">
+    <div class="cards" id="cards"></div>
+    <div class="grid2">
+      <div class="panel"><h3>Doctor-wise appointments today</h3><div id="docBars"></div></div>
+      <div class="panel"><h3>Daily overview (next 7 days)</h3><div id="dailyChart"></div></div>
+    </div>
+    <div class="grid2">
+      <div class="panel"><h3>Expected demand (demonstration forecast)</h3><div id="demandChart"></div></div>
+      <div class="panel"><h3>Notifications</h3><div id="notes"></div></div>
+    </div>
+  </section>
+
+  <section class="page" id="p-doctors">
+    <div class="panel"><button class="btn" data-act="addDoc">+ Add doctor</button></div>
+    <div class="panel tablewrap" id="docTable"></div>
+  </section>
+
+  <section class="page" id="p-appointments">
+    <div class="grid2">
+      <div class="panel">
+        <h3 id="formTitle">Book appointment</h3>
+        <form id="apptForm" novalidate>
+          <label>Patient name<input id="fName" maxlength="60" autocomplete="off"></label>
+          <label>Contact number (fictional)<input id="fPhone" placeholder="0300-555-0000" autocomplete="off"></label>
+          <label>Doctor<select id="fDoc"></select></label>
+          <label>Date<input type="date" id="fDate"></label>
+          <label>Time slot<select id="fTime"></select></label>
+          <label>Status<select id="fStatus"><option>Confirmed</option><option>Pending</option></select></label>
+          <p class="err" id="fErr"></p>
+          <div class="actions"><button class="btn" id="fSubmit">Book appointment</button><button type="button" class="btn ghost" id="fReset">Clear form</button></div>
+        </form>
+        <div id="alts"></div>
+      </div>
+      <div class="panel"><h3>Slots for the selected doctor and date</h3><div id="slotGrid"></div></div>
+    </div>
+    <div class="panel">
+      <h3>All appointments</h3>
+      <div class="filters">
+        <input id="sQ" placeholder="Search patient, doctor, ID…">
+        <select id="sSt"><option value="">All statuses</option><option>Confirmed</option><option>Pending</option><option>Completed</option><option>Cancelled</option></select>
+        <select id="sDoc"></select>
+        <input type="date" id="sDate" title="Filter by date">
+      </div>
+      <div class="tablewrap" id="apptTable"></div>
+    </div>
+  </section>
+
+  <section class="page" id="p-availability">
+    <div class="panel filters">
+      <label>Date<input type="date" id="avDate"></label>
+      <label>Time (optional)<input type="time" id="avTime"></label>
+      <label>Specialization<select id="avSpec"></select></label>
+    </div>
+    <div id="availList"></div>
+  </section>
+
+  <section class="page" id="p-analytics">
+    <div class="panel filters"><label>Date<input type="date" id="anDate"></label></div>
+    <div id="anCards" class="cards"></div>
+    <div class="panel tablewrap" id="anTable"></div>
+    <div class="grid2">
+      <div class="panel"><h3>Load on selected date (booked ÷ capacity)</h3><div id="anLoad"></div></div>
+      <div class="panel"><h3>All active appointments per doctor</h3><div id="anTotal"></div></div>
+    </div>
+  </section>
+
+  <section class="page" id="p-recommendations">
+    <div class="notice">⚠ Demonstration predictions and recommendations. These come from a simple weighted average written in JavaScript, not from a trained AI model.</div>
+    <div id="aiDyn"></div>
+    <div class="panel">
+      <h3>Slot recommender</h3>
+      <div class="filters">
+        <select id="rDoc"></select><input type="date" id="rDate"><input type="time" id="rTime">
+        <button class="btn" id="rBtn">Check and suggest</button>
+      </div>
+      <div id="rOut"></div>
+    </div>
+  </section>
+
+  <section class="page" id="p-settings">
+    <div class="panel">
+      <h3>Workload thresholds</h3>
+      <div class="filters">
+        <label>High demand at (% of capacity)<input type="number" id="thHi" min="10" max="100"></label>
+        <label>Underused at or below (%)<input type="number" id="thLo" min="0" max="90"></label>
+        <button class="btn" id="thSave">Save thresholds</button>
+      </div>
+    </div>
+    <div class="panel">
+      <h3>Demonstration data</h3>
+      <div class="actions">
+        <button class="btn" id="exportBtn">Download data (JSON)</button>
+        <button class="btn ghost" id="clearBtn">Delete all appointments</button>
+        <button class="btn danger" id="resetBtn">Reset demonstration data</button>
+      </div>
+      <p class="muted">Everything is stored only in this browser (LocalStorage). Reset restores the sample doctors, appointments and history.</p>
+    </div>
+  </section>
+</main>
+
+<div class="modal" id="modal" hidden><div class="box" id="modalBox"></div></div>
+<div id="toasts" aria-live="polite"></div>
+<script src="script.js"></script>
+</body>
+</html>
